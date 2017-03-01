@@ -5439,6 +5439,25 @@ function fillCircle(x, y, radius, color) {
     _ch_ctx.fill();
 }
 
+function fillOval(x, y, xRadius, yRadius, color) {
+    console.log("fillOval!");
+
+    _ch_checkArgs(arguments, 5, "fillOval(x, y, xRadius, yRadius, color)");
+
+    _ch_ctx.save();
+
+    _ch_ctx.fillStyle = color;
+
+    _ch_ctx.translate(x, y);
+    _ch_ctx.scale(xRadius, yRadius);
+    _ch_ctx.beginPath();
+    _ch_ctx.arc(0, 0, 1, 0, 2 * Math.PI, true);
+    _ch_ctx.fill();
+
+    _ch_ctx.restore();
+}
+
+
 
 /**
     <function name="strokeCircle" category="graphics">
@@ -9144,10 +9163,6 @@ function imageTransform(image, imageCallback) {
     var result = new Image();
     result.src = _ch_tempCanvas.toDataURL("image/png");
     return result; 
-}
-
-function fillOval() {
-    alert("not yet implemented!");
 }
 
 /** <function name="pixelTransform" level="advanced">
