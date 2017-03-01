@@ -9146,6 +9146,9 @@ function imageTransform(image, imageCallback) {
     return result; 
 }
 
+function fillOval() {
+    alert("not yet implemented!");
+}
 
 /** <function name="pixelTransform" level="advanced">
       <description>
