@@ -4,13 +4,26 @@
 
 // TODO: DECLARE and INTIALIZE your constants here
 var START_TIME = currentTime();
+var placeValue= 1
+var placeValue2= 1
+var earthArenaTexture = loadImage("earthArenaBG.jpg")
 var Card1Holders = []
 var Card2Holders = []
 var hand = []
-var cards = {trox:{name:"trox",element:"earth",rarity:4,attack:97,defense:99,creative:91,agility:89,effect1:"defenseBOOST3",effect2:"teamGame2"},riota:{name:"riota",element:"fire",rarity:4,attack:99,defense:85,creative:97,agility:96,effect1:"attackBOOST3",effect2:"stategy2"}}
+var cards = {
+trox:{name:"trox",element:"earth",rarity:4,attack:97,defense:99,creative:97,agility:89,effect1:"defenseBOOST3",effect2:"teamGame2"},
+riota:{name:"riota",element:"fire",rarity:4,attack:99,defense:85,creative:97,agility:98,effect1:"attackBOOST3",effect2:"stategy2"},
+eska:{name:"eska",element:"water",rarity:4,attack:97,defense:89,creative:99,agility:91,effect1:"creativeBOOST3",effect2:"revive2"},
+brisk:{name:"brisk",element:"air",rarity:4,attack:91,defense:92,creative:94,agility:99,effect1:"speedBOOST3",effect2:"death2"},
+lyca:{name:"lyca",element:"light",rarity:4,attack:91,defense:98,creative:97,agility:98,effect1:"avoid3",effect2:"speedBOOST2"},
+zye:{name:"zye",element:"darkness",rarity:4,attack:99,defense:95,creative:99,agility:91,effect1:"revive3",effect2:"attackBOOST2"},
+xena:{name:"xena",element:"magic",rarity:4,attack:98,defense:99,creative:98,agility:97,effect1:"dom3",effect2:"death3"},
 
+
+}
+var cardRow = 3
 var handCards = []
-var deckCards = [cards.trox,cards.riota]
+var deckCards = [cards.trox,cards.riota,cards.xena,cards.eska,cards.brisk,cards.lyca,cards.zye]
 var graveCards = []
 var row1Cards = []
 var row2Cards = []
@@ -49,18 +62,94 @@ function onSetup() {
 // When a key is pushed
 function onKeyStart(key) {
     lastKeyCode = key;
+	
+	if(key == 38 && cardRow >=2){
+		cardRow--
+	}
+	if(key == 40 && cardRow <=2){
+		cardRow++
+	}
+	if(key > 48 && key < 54){
+		placeValue =  key - 48
+		
+	}
+	if(key == 37 && placeValue >1){
+		placeValue--
+	}
+	if(key == 39 && placeValue <4 + (cardRow-2)){
+		placeValue++
+		//console.log("hi")
+	}
+	if(key == 13 && row2Cards.length <4 && cardRow == 2){
+		insertBack(row2Cards, handCards[placeValue-1])
+		removeAt(handCards, placeValue-1)
+		
+	}
+	console.log(cardRow)
 }
+function outlineCard(place){
+	if(cardRow == 3){
+		x=hand[place-1].x
+		y = screenHeight - 150
+		c = makeColor(0,0,0)
+		//removeAt(handCards, (key - 49))
+		strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}else if(cardRow == 2){
+		r = 0
+		x=(place-3+r/2)* 200 + (screenWidth/2) +25
+		y =(screenHeight/8) * 2+ 600
+		c= makeColor(0,1,1)
+		strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}else if(cardRow == 1){
+		
+		r = 1
+		x=(place-3+r/2)* 200 + (screenWidth/2) +25
+		y =(screenHeight/8)+ 600
+		c= makeColor(1,0,0)
+		strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}
+//	console.log("hello")
+
+//	yy = screenHeight/2
+//	xx = screenWidth / 2
+//	strokePolygon([xx,yy,xx+75,yy-25,xx+150,yy,xx+150,yy+125,xx+75,yy+150,xx,yy+125],c, 12)
+	//console.log(y)
+	
+}
+
+function outlineField(place){
+/*	if(cardRow == 2){
+		r = 0
+		x=(place-3+r/2)* 200 + (screenWidth/2) - 75
+		y =(screenHeight/8) * 2+ 600
+		c= makeColor(0,1,1)
+		strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}
+	if(cardRow == 1){
+		//	x:(c-2+r/2)* 200 + (screenWidth/2) - 75,y: (screenHeight/8)*(r+1)+ 600
+		
+		r = 1
+		x=(place-3+r/2)* 200 + (screenWidth/2) * 2 - 75
+		y =(screenHeight/4)+ 600
+		c= makeColor(0,1,1)
+		strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}
+	*/
+}
+
 function receiveCard(){
+	
 	if(deckCards.length > 0 && handCards.length < 5){
-		insertBack(handCards, deckCards[deckCards.length - 1])
-		removeAt(deckCards, deckCards.length - 1)
+		w = randomInteger(0,deckCards.length - 1)
+		insertBack(handCards, deckCards[w])
+		removeAt(deckCards, w)
 	}
 }
 function drawCardHolders(card){
 	var x = card.x
 	var y = card.y
 	var c = card.color
-	fillPolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c)
+	fillPolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125, x,y],c)
 }
 
 function drawHand(){
@@ -74,16 +163,31 @@ function drawHand(){
 		
 	}
 }
+function drawBackRow(){
+	for(var i = 0; i < row2Cards.length; i++){
+		
+		fillText(row2Cards[i].name, (i-2+1/2)* 200 + (screenWidth/2) - 5, (screenHeight/4)+ 600, makeColor(0, 0, 0), "30pt Baloo Bhaina", "center", "bold")
+		
+		fillText("cre: " + row2Cards[i].creative, (i-2+1/2)* 200 + (screenWidth/2) + 35, (screenHeight/4)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+		fillText("agi:" + row2Cards[i].agility, (i-2+1/2)* 200 + (screenWidth/2) - 45, (screenHeight/4)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+		fillText("def: " + row2Cards[i].defense, (i-2+1/2)* 200 + (screenWidth/2) + 35, (screenHeight/4)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+		fillText("att: " + row2Cards[i].attack, (i-2+1/2)* 200 + (screenWidth/2) - 45, (screenHeight/4)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+		
+	}
+}
 // Called 30 times or more per second
 function onTick() {
+//	console.log(placeValue)
     // Some sample drawing 
 	sw2 = screenWidth/2
 	
     fillRectangle(0,0,screenWidth,screenHeight,makeColor(51/255,32/255,8/255))
+	drawImage(earthArenaTexture)
 	fillPolygon([sw2 - 500, screenHeight, sw2 - 450, screenHeight - 160, sw2 + 450, screenHeight - 160, sw2 + 500, screenHeight], makeColor(240/255,230/255,140/255))
 	fillPolygon([sw2 - 500, screenHeight, sw2 - 450, screenHeight - 160, sw2 + 450, screenHeight - 160, sw2 + 500, screenHeight], makeColor(240/255,230/255,140/255))
 	//fillOval()
 	drawCardHolders({x: 250, y:800,color:makeColor(0,0,0),type:"deck"})
+	fillText("cards left: " + deckCards.length, 330, 950, makeColor(1,1,1),"30pt Baloo Bhaina", "center")
 	drawCardHolders({x: screenWidth - 400, y:800,color:makeColor(0,0,0),type:"dead"})
 	fillRectangle(0,0,200,screenHeight,makeColor(240/255,230/255,140/255))
 	fillRectangle(screenWidth-200,0,screenWidth,screenHeight,makeColor(240/255,230/255,140/255))
@@ -100,7 +204,11 @@ function onTick() {
 	for(var i = 0; i < hand.length; i++){
 		drawCardHolders(hand[i])
 	}
+	outlineField(placeValue2)
+	
+	outlineCard(placeValue)
 	drawHand()
+	drawBackRow()
   // strokeLine(screenWidth/2, 0, screenWidth/2, screenHeight, makeColor(1,1,1), 2)	
 }
 
