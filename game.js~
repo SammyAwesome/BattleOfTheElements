@@ -4,23 +4,12 @@
 
 // TODO: DECLARE and INTIALIZE your constants here
 var START_TIME = currentTime();
-
-var startMouseX = 0
-var startMouseY = 0
-var newMouseX = 0
-var newMouseY = 0
-var moving = false
-var movingCard
-var cardSpot
-var cardNewSpot
-var board=[makeArray(5),makeArray(4),makeArray(5)]
-var holders=[[],[],[]]
 var handIndex= 1
 var rowIndex= 1
 var earthArenaTexture = loadImage("earthArenaBG.jpg")
-//var Card1Holders = []
-//var Card2Holders = []
-//var hand = []
+var Card1Holders = []
+var Card2Holders = []
+var hand = []
 var cards = {
 trox:{name:"trox",element:"earth",rarity:4,attack:97,defense:99,creative:97,agility:89,effect1:"defenseBOOST3",effect2:"teamGame2"},
 riota:{name:"riota",element:"fire",rarity:4,attack:99,defense:85,creative:97,agility:98,effect1:"attackBOOST3",effect2:"stategy2"},
@@ -30,27 +19,27 @@ lyca:{name:"lyca",element:"light",rarity:4,attack:91,defense:98,creative:97,agil
 zye:{name:"zye",element:"darkness",rarity:4,attack:99,defense:95,creative:99,agility:91,effect1:"revive3",effect2:"attackBOOST2"},
 xena:{name:"xena",element:"magic",rarity:4,attack:98,defense:99,creative:98,agility:97,effect1:"dom3",effect2:"death3"},
 
+
 }
 var cardRow = 3
-//var handCards = []
+var handCards = []
 var deckCards = [cards.trox,cards.riota,cards.xena,cards.eska,cards.brisk,cards.lyca,cards.zye]
 var graveCards = []
-//var row1Cards = []
-//var row2Cards = makeArray(4)
-
+var row1Cards = []
+var row2Cards = makeArray(4)
 
 for(var r = 0;r<2;r++){
 	for(var c = 0; c<5 - r; c++){
-		insertBack(holders[0], {x:(c-2+r/2)* 200 + (screenWidth/2) - 75,y: (screenHeight/8)*(r+1)+ 600, color:makeColor(1,1,1)})
+		insertBack(Card1Holders, {x:(c-2+r/2)* 200 + (screenWidth/2) - 75,y: (screenHeight/8)*(r+1)+ 600, color:makeColor(1,1,1)})
 	}
 }
 for(var r = 0;r<2;r++){
 	for(var c = 0; c<5 - r; c++){
-		insertBack(holders[1], {x:(c-2+r/2)* 200 + (screenWidth/2) -75,y: 250 -((screenHeight/8)*(r-1)), color:makeColor(.9,.3,.3)})
+		insertBack(Card2Holders, {x:(c-2+r/2)* 200 + (screenWidth/2) -75,y: 250 -((screenHeight/8)*(r-1)), color:makeColor(.9,.3,.3)})
 	}
 }
 for(var i = 0; i<5;i++){
-	insertBack(holders[2], {x:screenWidth/2 + (i - 2) * 170 - 75, y:screenHeight - 150, color:makeColor(.5,.5,.5)})
+	insertBack(hand, {x:screenWidth/2 + (i - 2) * 170 - 75, y:screenHeight - 150, color:makeColor(.5,.5,.5)})
 }
 ///////////////////////////////////////////////////////////////
 //                                                           //
@@ -122,8 +111,8 @@ function onKeyStart(key) {
 		}
 	}
 	if(key == 13  && cardRow == 2){
-		board[1][rowIndex-1] = board[2][handIndex-1]
-		removeAt(board[2], handIndex-1)
+		row2Cards[rowIndex-1] = handCards[handIndex-1]
+		removeAt(handCards, handIndex-1)
 		
 	}
 	//console.log(cardRow)
@@ -131,7 +120,7 @@ function onKeyStart(key) {
 }
 function outlineCard(place){
 	if(cardRow == 3){
-		x=holders[2][place-1].x
+		x=hand[place-1].x
 		y = screenHeight - 150
 		c = makeColor(0,0,0)
 		//removeAt(handCards, (key - 49))
@@ -179,52 +168,18 @@ function outlineField(place){
 	*/
 }
 function onTouchStart(x,y){
-    startMouseX = x
-    startMouseY = y
-    moving = true
-	cardSpot = cardUnderMouse(x,y)
-	console.log("ontouchstart", cardSpot)
-	
-	
+    var startMouseX = x
+    var startMouseY = y
+    var moving = true
 }
 function onTouchEnd(x,y){
-    moving = false
- //   newMouseX = x
-   // newMouseY = y
-	cardNewSpot = cardUnderMouse(x,y)
-	console.log(cardNewSpot)
-	console.log(cardSpot)
-	if(cardSpot!=undefined && cardNewSpot!=undefined){
-		console.log("4")
-		if(cardNewSpot.place != cardSpot.place || cardNewSpot.row != cardSpot.row){
-			console.log("3")
-			if(cardNewSpot.row <= cardSpot.row){
-				console.log(cardSpot)
-				var sourceCard = board[cardSpot.row-1][cardSpot.place]
-				console.log("2")
-				if(sourceCard != undefined){
-					var newCard = board[cardNewSpot.row-1][cardNewSpot.place]
-					console.log("1")
-					if(newCard == undefined){
-						console.log("hi")
-						board[cardSpot.row-1][cardSpot.place] = undefined
-						board[cardNewSpot.row-1][cardNewSpot.place] = sourceCard
-						console.log()
-					}
-				}
-			}
-		}
-	}
-	
+    var moving = false
+    var newMouseX = x
+    var newMouseY = y
 }
-function onTouchMove(x,y){
-    moving = true
-    startMouseX = x
-    startMouseY = y
-    
-}
+
 function DragSquare(x,y){
-    fillRectangle(x-50,y-50,100,100,makeColor(1,1,1))
+    fillRectangle(x,y,100,100,makeColor(1,1,1))
 }
 
 
@@ -236,61 +191,32 @@ function cardUnderMouse(x,y){
 		console.log("mid")
 	    currentRow = 2
 	    r = 0
-	    currentPlace = (x- screenWidth/2 -25) / 200 + 2 - r/2 
-	//x = (c-2+r/2)* 200 + (screenWidth/2) - 75
+	    currentPlace = (x- screenWidth/2 + 75) / 200 + 2 - r/2
 	    currentPlace = floor(currentPlace)
-		if(currentPlace > -1 && currentPlace < 4){
-			return {place:currentPlace,row:currentRow}
-			
-		}
 	    
 	}else if(y < screenHeight/8 + 750 && y >screenHeight / 8 + 575){
 		console.log("front row")
 	    currentRow = 1
 	    
 	    r= 1
-	    currentPlace = (x- screenWidth/2 -25) / 200 + 2 - r/2
-	    currentPlace = floor(currentPlace) +1
-		if(currentPlace > -1 && currentPlace < 5){
-			return {place:currentPlace,row:currentRow}
-			
-		}
+	    currentPlace = (x- screenWidth/2 + 75) / 200 + 2 - r/2
+	   currentPlace = floor(currentPlace)
 	}
 	
 	if(y < screenHeight && y >screenHeight - 175){
 		console.log("hand")
 		currentRow = 3
-		r=0
-		currentPlace = (x+415 - screenWidth/2)/170
-	    currentPlace = floor(currentPlace)
-		if(currentPlace > -1 && currentPlace < 5){
-			return {place:currentPlace,row:currentRow}
-			
-		}
 	}
     console.log(currentPlace)
     
 }
 function receiveCard(){
 	
-	if(deckCards.length > 0){
-		
-	    var	y = findHand()
-		if(y != undefined){
-			w = randomInteger(0,deckCards.length - 1)
-			board[2][y] = deckCards[w]
-			removeAt(deckCards, w)
-		}
-		
+	if(deckCards.length > 0 && handCards.length < 5){
+		w = randomInteger(0,deckCards.length - 1)
+		insertBack(handCards, deckCards[w])
+		removeAt(deckCards, w)
 	}
-}
-function findHand(){
-	for(var i = 0; i < board[2].length; i++){
-		if(board[2][i] == undefined){
-			return i 
-		}
-	}
-	return undefined
 }
 function drawCardHolders(card){
 	var x = card.x
@@ -300,51 +226,32 @@ function drawCardHolders(card){
 }
 
 function drawHand(){
-	for(var i = 0; i < board[2].length; i++){
-		if(board[2][i] != undefined){
-			fillText(board[2][i].name, screenWidth/2 + (i - 2) * 170, screenHeight - 150, makeColor(1, 1, 1), "30pt Baloo Bhaina", "center", "bold")
+	for(var i = 0; i < handCards.length; i++){
+		fillText(handCards[i].name, screenWidth/2 + (i - 2) * 170, screenHeight - 150, makeColor(1, 1, 1), "30pt Baloo Bhaina", "center", "bold")
 		
-			fillText("cre: " + board[2][i].creative, screenWidth/2 + (i - 2) * 170 + 40, screenHeight - 80, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
-			fillText("agi:" + board[2][i].agility, screenWidth/2 + (i - 2) * 170 - 40, screenHeight - 80, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
-			fillText("def: " + board[2][i].defense, screenWidth/2 + (i - 2) * 170 + 40, screenHeight - 50, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
-			fillText("att: " + board[2][i].attack, screenWidth/2 + (i - 2) * 170- 40, screenHeight - 50, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
-		}
+		fillText("cre: " + handCards[i].creative, screenWidth/2 + (i - 2) * 170 + 40, screenHeight - 80, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
+		fillText("agi:" + handCards[i].agility, screenWidth/2 + (i - 2) * 170 - 40, screenHeight - 80, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
+		fillText("def: " + handCards[i].defense, screenWidth/2 + (i - 2) * 170 + 40, screenHeight - 50, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
+		fillText("att: " + handCards[i].attack, screenWidth/2 + (i - 2) * 170- 40, screenHeight - 50, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
+		
 	}
 }
 function drawBackRow(){
-	for(var i = 0; i < board[1].length; i++){
-		if(board[1][i] != undefined){
-		drawCard((i-2+1/2)* 200 + (screenWidth/2),(screenHeight/4)+ 670, board[1][i])
-
+	for(var i = 0; i < row2Cards.length; i++){
+		if(row2Cards[i] != undefined){
+		
+			fillText(row2Cards[i].name, (i-2+1/2)* 200 + (screenWidth/2) - 5, (screenHeight/4)+ 600, makeColor(0, 0, 0), "30pt Baloo Bhaina", "center", "bold")
+		
+			fillText("cre: " + row2Cards[i].creative, (i-2+1/2)* 200 + (screenWidth/2) + 35, (screenHeight/4)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			fillText("agi:" + row2Cards[i].agility, (i-2+1/2)* 200 + (screenWidth/2) - 45, (screenHeight/4)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			fillText("def: " + row2Cards[i].defense, (i-2+1/2)* 200 + (screenWidth/2) + 35, (screenHeight/4)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			fillText("att: " + row2Cards[i].attack, (i-2+1/2)* 200 + (screenWidth/2) - 45, (screenHeight/4)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
 		}	
 	}
 }
-function drawFrontRow(){
-	for(var i = 0; i < board[0].length; i++){
-		if(board[0][i] != undefined){
-		
-			fillText(board[0][i].name, (i-2+1/2)* 200 + (screenWidth/2) - 100, (screenHeight/8)+ 600, makeColor(0, 0, 0), "30pt Baloo Bhaina", "center", "bold")
-		
-			fillText("cre: " + board[0][i].creative, (i-2+1/2)* 200 + (screenWidth/2) -60, (screenHeight/8)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-			fillText("agi:" + board[0][i].agility, (i-2+1/2)* 200 + (screenWidth/2) - 140, (screenHeight/8)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-			fillText("def: " + board[0][i].defense, (i-2+1/2)* 200 + (screenWidth/2) -60, (screenHeight/8)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-			fillText("att: " + board[0][i].attack, (i-2+1/2)* 200 + (screenWidth/2) - 140, (screenHeight/8)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-		}	
-	}
+function onMouseMove(x,y){
+	cardUnderMouse(x,y)
 }
-function drawCard(x,y,card){
-	if (card == undefined) {return;}
-	
-		fillText(card.name, x-5, y-70, makeColor(0, 0, 0), "30pt Baloo Bhaina", "center", "bold")
-	
-		fillText("cre: " + card.creative, x + 35, y, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-		fillText("agi:" + card.agility, x - 45, y, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-		fillText("def: " + card.defense, x + 35, y+30, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-		fillText("att: " + card.attack, x - 45, y+30, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-}
-//function onMouseMove(x,y){
-//	cardUnderMouse(x,y)
-//}
 // Called 30 times or more per second
 function onTick() {
 //	console.log(handIndex)
@@ -365,14 +272,14 @@ function onTick() {
 	receiveCard()
 	
 //	fillRectangle(screenWidth/2-400,screenHeight-200, 800, 200, makeColor(220/255,118/255,10/255))
-	for(var i = 0; i < holders[0].length; i++){
-		drawCardHolders(holders[0][i])
+	for(var i = 0; i < Card1Holders.length; i++){
+		drawCardHolders(Card1Holders[i])
 	}
-	for(var i = 0; i < holders[1].length; i++){
-		drawCardHolders(holders[1][i])
+	for(var i = 0; i < Card2Holders.length; i++){
+		drawCardHolders(Card2Holders[i])
 	}
-	for(var i = 0; i < holders[2].length; i++){
-		drawCardHolders(holders[2][i])
+	for(var i = 0; i < hand.length; i++){
+		drawCardHolders(hand[i])
 	}
 	outlineField(rowIndex)
 	if(cardRow==3){
@@ -383,14 +290,9 @@ function onTick() {
 		
 	}
 	drawHand()
-    drawBackRow()
-	drawFrontRow()
+        drawBackRow()
     if(moving == true){
-//	DragSquare(startMouseX,startMouseY)
-	drawCard(startMouseX,startMouseY,board[cardSpot.row-1][cardSpot.place])
- 	
-    }else{
-//	DragSquare(newMouseX,newMouseY)
+	DragSquare(startMouseX,startMouseY
     }
   // strokeLine(screenWidth/2, 0, screenWidth/2, screenHeight, makeColor(1,1,1), 2)	
 }
