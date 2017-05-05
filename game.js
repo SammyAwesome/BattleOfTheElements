@@ -4,7 +4,8 @@
 
 // TODO: DECLARE and INTIALIZE your constants here
 var START_TIME = currentTime();
-
+var testx = 300
+var testy = 300
 var startMouseX = 0
 var startMouseY = 0
 var newMouseX = 0
@@ -18,17 +19,19 @@ var holders=[[],[],[]]
 var handIndex= 1
 var rowIndex= 1
 var earthArenaTexture = loadImage("earthArenaBG.jpg")
+var eskatest = loadImage("eskatest.png")
+var xenaImage
 //var Card1Holders = []
 //var Card2Holders = []
 //var hand = []
 var cards = {
-trox:{name:"trox",element:"earth",rarity:4,attack:97,defense:99,creative:97,agility:89,effect1:"defenseBOOST3",effect2:"teamGame2"},
-riota:{name:"riota",element:"fire",rarity:4,attack:99,defense:85,creative:97,agility:98,effect1:"attackBOOST3",effect2:"stategy2"},
-eska:{name:"eska",element:"water",rarity:4,attack:97,defense:89,creative:99,agility:91,effect1:"creativeBOOST3",effect2:"revive2"},
-brisk:{name:"brisk",element:"air",rarity:4,attack:91,defense:92,creative:94,agility:99,effect1:"speedBOOST3",effect2:"death2"},
-lyca:{name:"lyca",element:"light",rarity:4,attack:91,defense:98,creative:97,agility:98,effect1:"avoid3",effect2:"speedBOOST2"},
-zye:{name:"zye",element:"darkness",rarity:4,attack:99,defense:95,creative:99,agility:91,effect1:"revive3",effect2:"attackBOOST2"},
-xena:{name:"xena",element:"magic",rarity:4,attack:98,defense:99,creative:98,agility:97,effect1:"dom3",effect2:"death3"},
+trox:{name:"trox",element:"earth",rarity:4,attack:97,defense:99,creative:97,agility:89,effect1:"defenseBOOST3",effect2:"teamGame2",image:undefined},
+riota:{name:"riota",element:"fire",rarity:4,attack:99,defense:85,creative:97,agility:98,effect1:"attackBOOST3",effect2:"stategy2",image:undefined},
+eska:{name:"eska",element:"water",rarity:4,attack:97,defense:89,creative:99,agility:91,effect1:"creativeBOOST3",effect2:"revive2",image:undefined},
+brisk:{name:"brisk",element:"air",rarity:4,attack:91,defense:92,creative:94,agility:99,effect1:"speedBOOST3",effect2:"death2",image:undefined},
+lyca:{name:"lyca",element:"light",rarity:4,attack:91,defense:98,creative:97,agility:98,effect1:"avoid3",effect2:"speedBOOST2",image:undefined},
+zye:{name:"zye",element:"darkness",rarity:4,attack:99,defense:95,creative:99,agility:91,effect1:"revive3",effect2:"attackBOOST2",image:undefined},
+xena:{name:"xena",element:"magic",rarity:4,attack:98,defense:99,creative:98,agility:97,effect1:"dom3",effect2:"death3",image:loadImage("Xena.png")},
 
 }
 var cardRow = 3
@@ -44,6 +47,7 @@ for(var r = 0;r<2;r++){
 		insertBack(holders[0], {x:(c-2+r/2)* 200 + (screenWidth/2) - 75,y: (screenHeight/8)*(r+1)+ 600, color:makeColor(1,1,1)})
 	}
 }
+//OPPONENTS vv
 for(var r = 0;r<2;r++){
 	for(var c = 0; c<5 - r; c++){
 		insertBack(holders[1], {x:(c-2+r/2)* 200 + (screenWidth/2) -75,y: 250 -((screenHeight/8)*(r-1)), color:makeColor(.9,.3,.3)})
@@ -78,6 +82,18 @@ function onKeyStart(key) {
 		cardRow--
 		
 		
+	}
+	if(key == 38){
+		testy= testy-10
+	}
+	if(key == 39){
+		testx= testx+10
+	}
+	if(key == 37){
+		testx= testx-10
+	}
+	if(key == 40){
+		testy= testy+10
 	}
 	if(key == 40 && cardRow <=2){
 		cardRow++
@@ -147,7 +163,7 @@ function outlineCard(place){
 		r = 1
 		x=(place-4+r/2)* 200 + (screenWidth/2) +25
 		y =(screenHeight/8)+ 600
-		c= makeColor(1,0,0)
+		c= makeColor(0,.4,0)
 		strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
 	}
 //	console.log("hello")
@@ -232,6 +248,7 @@ function cardUnderMouse(x,y){
 	var currentRow;
 	var currentPlace;
 	if(y < screenHeight/4 + 750 && y >screenHeight / 4 + 575){
+		
 		//((x-left)/screenWidth-2left)*4
 		console.log("mid")
 	    currentRow = 2
@@ -239,6 +256,8 @@ function cardUnderMouse(x,y){
 	    currentPlace = (x- screenWidth/2 -25) / 200 + 2 - r/2 
 	//x = (c-2+r/2)* 200 + (screenWidth/2) - 75
 	    currentPlace = floor(currentPlace)
+		//outlinePath(currentPlace,currentRow)
+	
 		if(currentPlace > -1 && currentPlace < 4){
 			return {place:currentPlace,row:currentRow}
 			
@@ -251,6 +270,8 @@ function cardUnderMouse(x,y){
 	    r= 1
 	    currentPlace = (x- screenWidth/2 -25) / 200 + 2 - r/2
 	    currentPlace = floor(currentPlace) +1
+	//	outlinePath(currentPlace,currentRow)
+	
 		if(currentPlace > -1 && currentPlace < 5){
 			return {place:currentPlace,row:currentRow}
 			
@@ -258,11 +279,14 @@ function cardUnderMouse(x,y){
 	}
 	
 	if(y < screenHeight && y >screenHeight - 175){
+		
 		console.log("hand")
 		currentRow = 3
 		r=0
 		currentPlace = (x+415 - screenWidth/2)/170
 	    currentPlace = floor(currentPlace)
+	//	outlinePath(currentPlace,currentRow)
+	
 		if(currentPlace > -1 && currentPlace < 5){
 			return {place:currentPlace,row:currentRow}
 			
@@ -311,6 +335,43 @@ function drawHand(){
 		}
 	}
 }
+function outlinePath(place,row){
+	place = place+ 1
+	console.log("testplx")
+	if(row == 1){
+		console.log("test?")
+		r = 0
+			x=(place-4+r/2)* 200 + (screenWidth/2) + 125
+			y =	(screenHeight/8)*(r+1)+ 600
+			c= makeColor(0,.4,0)
+			strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}
+	if(row == 2){
+		console.log("test?")
+		r = 1
+	
+			x=(place-4+r/2)* 200 + (screenWidth/2) + 125
+			y =	(screenHeight/8)*(r+1)+ 600
+			c= makeColor(0,.4,0)
+			strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}
+/*	if(row == 3){
+		console.log("test?")
+		r = 1
+			x=(place-4+r/2)* 200 + (screenWidth/2) +25
+			y =(screenHeight/8)+ 600
+			c= makeColor(0,.4,0)
+			strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+	}
+	*/
+	console.log("place:"+place)
+	
+//	r = 1
+//	x=(place-4+r/2)* 200 + (screenWidth/2) +25
+//	y =(screenHeight/8)+ 600
+//	c= makeColor(0,.4,0)
+//	strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
+}
 function drawBackRow(){
 	for(var i = 0; i < board[1].length; i++){
 		if(board[1][i] != undefined){
@@ -334,19 +395,28 @@ function drawFrontRow(){
 }
 function drawCard(x,y,card){
 	if (card == undefined) {return;}
-	
-		fillText(card.name, x-5, y-70, makeColor(0, 0, 0), "30pt Baloo Bhaina", "center", "bold")
-	
-		fillText("cre: " + card.creative, x + 35, y, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-		fillText("agi:" + card.agility, x - 45, y, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-		fillText("def: " + card.defense, x + 35, y+30, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
-		fillText("att: " + card.attack, x - 45, y+30, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+		if(card.image==undefined){
+			fillText(card.name, x-5, y-70, makeColor(0, 0, 0), "30pt Baloo Bhaina", "center", "bold")
+
+			fillText("cre: " + card.creative, x + 35, y, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			fillText("agi:" + card.agility, x - 45, y, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			fillText("def: " + card.defense, x + 35, y+30, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			fillText("att: " + card.attack, x - 45, y+30, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			
+		}
+		
+		if(card.image != undefined){
+			
+			drawTransformedImage(card.image,x,y-5,0,.05,.05)
+			
+		}
 }
 //function onMouseMove(x,y){
 //	cardUnderMouse(x,y)
 //}
 // Called 30 times or more per second
 function onTick() {
+	
 //	console.log(handIndex)
     // Some sample drawing 
 	sw2 = screenWidth/2
@@ -363,7 +433,7 @@ function onTick() {
 	fillRectangle(screenWidth-200,0,screenWidth,screenHeight,makeColor(240/255,230/255,140/255))
 	strokeLine(0,screenHeight/2,screenWidth, screenHeight/2,makeColor(240/255,230/255,140/255),12)
 	receiveCard()
-	
+	drawTransformedImage(eskatest,testx,testy,0,.3,.3)
 //	fillRectangle(screenWidth/2-400,screenHeight-200, 800, 200, makeColor(220/255,118/255,10/255))
 	for(var i = 0; i < holders[0].length; i++){
 		drawCardHolders(holders[0][i])
@@ -376,10 +446,10 @@ function onTick() {
 	}
 	outlineField(rowIndex)
 	if(cardRow==3){
-		outlineCard(handIndex)
+	//	outlineCard(handIndex)
 		
 	}else{
-		outlineCard(rowIndex)
+	//	outlineCard(rowIndex)
 		
 	}
 	drawHand()
@@ -388,7 +458,11 @@ function onTick() {
     if(moving == true){
 //	DragSquare(startMouseX,startMouseY)
 	drawCard(startMouseX,startMouseY,board[cardSpot.row-1][cardSpot.place])
- 	
+	var currentSpot = cardUnderMouse(startMouseX, startMouseY)
+	if(currentSpot!=undefined){
+		outlinePath(currentSpot.place, currentSpot.row)
+	 	
+	}
     }else{
 //	DragSquare(newMouseX,newMouseY)
     }
