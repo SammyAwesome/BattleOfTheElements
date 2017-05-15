@@ -21,6 +21,9 @@ var handIndex= 1
 var rowIndex= 1
 var earthArenaTexture = loadImage("earthArenaBG.jpg")
 var eskatest = loadImage("eskatest.png")
+var cardHolderImage = loadImage("EarthCardHolder.png")
+var earthHandImage = loadImage("EarthHand.png")
+var earthEdge = loadImage("EarthEdge.png")
 var xenaImage
 //var Card1Holders = []
 //var Card2Holders = []
@@ -328,7 +331,8 @@ function drawCardHolders(card){
 	var x = card.x
 	var y = card.y
 	var c = card.color
-	fillPolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125, x,y],c)
+//	fillPolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125, x,y],c)
+	drawTransformedImage(cardHolderImage,x + 75,y+65, 0, .1, .1)
 }
 
 function drawHand(){
@@ -439,15 +443,19 @@ function onTick() {
 	
     fillRectangle(0,0,screenWidth,screenHeight,makeColor(51/255,32/255,8/255))
 	drawImage(earthArenaTexture)
-	fillPolygon([sw2 - 500, screenHeight, sw2 - 450, screenHeight - 160, sw2 + 450, screenHeight - 160, sw2 + 500, screenHeight], makeColor(240/255,230/255,140/255))
-	fillPolygon([sw2 - 500, screenHeight, sw2 - 450, screenHeight - 160, sw2 + 450, screenHeight - 160, sw2 + 500, screenHeight], makeColor(240/255,230/255,140/255))
+	//fillPolygon([sw2 - 500, screenHeight, sw2 - 450, screenHeight - 160, sw2 + 450, screenHeight - 160, sw2 + 500, screenHeight], makeColor(240/255,230/255,140/255))
+	drawTransformedImage(earthHandImage,sw2, screenHeight,0,.57,.85)
+	//fillPolygon([sw2 - 500, screenHeight, sw2 - 450, screenHeight - 160, sw2 + 450, screenHeight - 160, sw2 + 500, screenHeight], makeColor(240/255,230/255,140/255))
 	//fillOval()
+//	drawTransformedImage(earthHandImage,sw2-500, screenHeight,0, 0,0)
 	drawCardHolders({x: 250, y:800,color:makeColor(0,0,0),type:"deck"})
 	fillText("cards left: " + deckCards.length, 330, 950, makeColor(1,1,1),"30pt Baloo Bhaina", "center")
 	drawCardHolders({x: screenWidth - 400, y:800,color:makeColor(0,0,0),type:"dead"})
-	fillRectangle(0,0,200,screenHeight,makeColor(240/255,230/255,140/255))
-	fillRectangle(screenWidth-200,0,screenWidth,screenHeight,makeColor(240/255,230/255,140/255))
-	strokeLine(0,screenHeight/2,screenWidth, screenHeight/2,makeColor(240/255,230/255,140/255),12)
+	drawTransformedImage(earthEdge,100, 650, 0, .3,.5)
+	//fillRectangle(0,0,200,screenHeight,makeColor(240/255,230/255,140/255))
+	drawTransformedImage(earthEdge,sw2*2 -100, 650, 0, .3,.5)
+	//fillRectangle(screenWidth-200,0,screenWidth,screenHeight,makeColor(240/255,230/255,140/255))
+	//strokeLine(0,screenHeight/2,screenWidth, screenHeight/2,makeColor(240/255,230/255,140/255),12)
 	receiveCard()
 	drawTransformedImage(eskatest,testx,testy,0,.3,.3)
 //	fillRectangle(screenWidth/2-400,screenHeight-200, 800, 200, makeColor(220/255,118/255,10/255))
