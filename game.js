@@ -11,6 +11,7 @@ var startMouseY = 0
 var newMouseX = 0
 var newMouseY = 0
 var moving = false
+var turn = true
 var movingCard
 var cardSpot
 var cardNewSpot
@@ -25,13 +26,13 @@ var xenaImage
 //var Card2Holders = []
 //var hand = []
 var cards = {
-trox:{name:"trox",element:"earth",rarity:4,attack:97,defense:99,creative:97,agility:89,effect1:"defenseBOOST3",effect2:"teamGame2",image:undefined},
+trox:{name:"trox",element:"earth",rarity:4,attack:97,defense:99,creative:97,agility:89,effect1:"defenseBOOST3",effect2:"teamGame2",image:loadImage("Trox.png"),size:.3},
 riota:{name:"riota",element:"fire",rarity:4,attack:99,defense:85,creative:97,agility:98,effect1:"attackBOOST3",effect2:"stategy2",image:undefined},
-eska:{name:"eska",element:"water",rarity:4,attack:97,defense:89,creative:99,agility:91,effect1:"creativeBOOST3",effect2:"revive2",image:undefined},
+eska:{name:"eska",element:"water",rarity:4,attack:97,defense:89,creative:99,agility:91,effect1:"creativeBOOST3",effect2:"revive2",image:loadImage("Eska.png"),size:.3},
 brisk:{name:"brisk",element:"air",rarity:4,attack:91,defense:92,creative:94,agility:99,effect1:"speedBOOST3",effect2:"death2",image:undefined},
 lyca:{name:"lyca",element:"light",rarity:4,attack:91,defense:98,creative:97,agility:98,effect1:"avoid3",effect2:"speedBOOST2",image:undefined},
 zye:{name:"zye",element:"darkness",rarity:4,attack:99,defense:95,creative:99,agility:91,effect1:"revive3",effect2:"attackBOOST2",image:undefined},
-xena:{name:"xena",element:"magic",rarity:4,attack:98,defense:99,creative:98,agility:97,effect1:"dom3",effect2:"death3",image:loadImage("Xena.png")},
+xena:{name:"xena",element:"magic",rarity:4,attack:98,defense:99,creative:98,agility:97,effect1:"dom3",effect2:"death3",image:loadImage("Xena.png"),size:.05},
 
 }
 var cardRow = 3
@@ -82,6 +83,9 @@ function onKeyStart(key) {
 		cardRow--
 		
 		
+	}
+	if(key == 32){
+		turn = !turn
 	}
 	if(key == 38){
 		testy= testy-10
@@ -197,8 +201,10 @@ function outlineField(place){
 function onTouchStart(x,y){
     startMouseX = x
     startMouseY = y
-    moving = true
 	cardSpot = cardUnderMouse(x,y)
+	if (cardSpot != undefined) {
+		moving = true;
+	}
 	console.log("ontouchstart", cardSpot)
 	
 	
@@ -222,10 +228,12 @@ function onTouchEnd(x,y){
 					var newCard = board[cardNewSpot.row-1][cardNewSpot.place]
 					console.log("1")
 					if(newCard == undefined){
-						console.log("hi")
-						board[cardSpot.row-1][cardSpot.place] = undefined
-						board[cardNewSpot.row-1][cardNewSpot.place] = sourceCard
-						console.log()
+						if(turn==true){
+							console.log("hi")
+							board[cardSpot.row-1][cardSpot.place] = undefined
+							board[cardNewSpot.row-1][cardNewSpot.place] = sourceCard
+							console.log()
+						}
 					}
 				}
 			}
@@ -234,7 +242,7 @@ function onTouchEnd(x,y){
 	
 }
 function onTouchMove(x,y){
-    moving = true
+//    moving = true
     startMouseX = x
     startMouseY = y
     
@@ -326,12 +334,15 @@ function drawCardHolders(card){
 function drawHand(){
 	for(var i = 0; i < board[2].length; i++){
 		if(board[2][i] != undefined){
+			drawCard(screenWidth/2 + (i - 2) * 170,screenHeight - 80, board[2][i])
+			/*
 			fillText(board[2][i].name, screenWidth/2 + (i - 2) * 170, screenHeight - 150, makeColor(1, 1, 1), "30pt Baloo Bhaina", "center", "bold")
 		
 			fillText("cre: " + board[2][i].creative, screenWidth/2 + (i - 2) * 170 + 40, screenHeight - 80, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
 			fillText("agi:" + board[2][i].agility, screenWidth/2 + (i - 2) * 170 - 40, screenHeight - 80, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
 			fillText("def: " + board[2][i].defense, screenWidth/2 + (i - 2) * 170 + 40, screenHeight - 50, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
 			fillText("att: " + board[2][i].attack, screenWidth/2 + (i - 2) * 170- 40, screenHeight - 50, makeColor(1, 1, 1), "18pt Baloo Bhaina", "center", "bold")
+			*/
 		}
 	}
 }
@@ -383,14 +394,19 @@ function drawBackRow(){
 function drawFrontRow(){
 	for(var i = 0; i < board[0].length; i++){
 		if(board[0][i] != undefined){
-		
+			
+			drawCard((i-2+1/2)* 200 + (screenWidth/2) -100,(screenHeight/8)+ 670, board[0][i])
+		/*
 			fillText(board[0][i].name, (i-2+1/2)* 200 + (screenWidth/2) - 100, (screenHeight/8)+ 600, makeColor(0, 0, 0), "30pt Baloo Bhaina", "center", "bold")
 		
 			fillText("cre: " + board[0][i].creative, (i-2+1/2)* 200 + (screenWidth/2) -60, (screenHeight/8)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
 			fillText("agi:" + board[0][i].agility, (i-2+1/2)* 200 + (screenWidth/2) - 140, (screenHeight/8)+ 670, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
 			fillText("def: " + board[0][i].defense, (i-2+1/2)* 200 + (screenWidth/2) -60, (screenHeight/8)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+		
 			fillText("att: " + board[0][i].attack, (i-2+1/2)* 200 + (screenWidth/2) - 140, (screenHeight/8)+ 700, makeColor(0, 0, 0), "18pt Baloo Bhaina", "center", "bold")
+			*/
 		}	
+		
 	}
 }
 function drawCard(x,y,card){
@@ -407,7 +423,7 @@ function drawCard(x,y,card){
 		
 		if(card.image != undefined){
 			
-			drawTransformedImage(card.image,x,y-5,0,.05,.05)
+			drawTransformedImage(card.image,x,y-5,0,card.size,card.size)
 			
 		}
 }
@@ -452,6 +468,9 @@ function onTick() {
 	//	outlineCard(rowIndex)
 		
 	}
+	
+		console.log(turn)
+	
 	drawHand()
     drawBackRow()
 	drawFrontRow()
