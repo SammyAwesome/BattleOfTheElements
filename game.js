@@ -24,6 +24,7 @@ var eskatest = loadImage("eskatest.png")
 var cardHolderImage = loadImage("EarthCardHolder.png")
 var earthHandImage = loadImage("EarthHand.png")
 var earthEdge = loadImage("EarthEdge.png")
+var earthpass = loadImage("EarthPassButton.png")
 var xenaImage
 //var Card1Holders = []
 //var Card2Holders = []
@@ -358,7 +359,7 @@ function outlinePath(place,row){
 		r = 0
 			x=(place-4+r/2)* 200 + (screenWidth/2) + 125
 			y =	(screenHeight/8)*(r+1)+ 600
-			c= makeColor(0,.4,0)
+			c= makeColor(0,.2,0)
 			strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
 	}
 	if(row == 2){
@@ -367,7 +368,7 @@ function outlinePath(place,row){
 	
 			x=(place-4+r/2)* 200 + (screenWidth/2) + 125
 			y =	(screenHeight/8)*(r+1)+ 600
-			c= makeColor(0,.4,0)
+			c= makeColor(0,.2,0)
 			strokePolygon([x,y,x+75,y-25,x+150,y,x+150,y+125,x+75,y+150,x,y+125],c, 12, true)
 	}
 /*	if(row == 3){
@@ -454,6 +455,7 @@ function onTick() {
 	drawTransformedImage(earthEdge,100, 650, 0, .3,.5)
 	//fillRectangle(0,0,200,screenHeight,makeColor(240/255,230/255,140/255))
 	drawTransformedImage(earthEdge,sw2*2 -100, 650, 0, .3,.5)
+	drawTransformedImage(earthpass, sw2*2 -100, 700, 0, .3,.3)
 	//fillRectangle(screenWidth-200,0,screenWidth,screenHeight,makeColor(240/255,230/255,140/255))
 	//strokeLine(0,screenHeight/2,screenWidth, screenHeight/2,makeColor(240/255,230/255,140/255),12)
 	receiveCard()
